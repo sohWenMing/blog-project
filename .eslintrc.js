@@ -28,9 +28,11 @@ module.exports = {
         '@stylistic/js/indent': ['error', 4],
         'no-console': 'off',
         '@stylistic/js/quotes': ['error', 'single'],
-        '@stylistic/js/space-in-parens': ['error', 'always'],
         '@stylistic/js/linebreak-style': ['error', 'unix'],
         '@stylistic/js/semi': ['error', 'always'],
-        '@stylistic/js/no-trailing-spaces': 'error'
+        '@stylistic/js/no-trailing-spaces': 'error',
+        'object-curly-spacing': [
+            'error', 'always'
+        ]
     }
 };
