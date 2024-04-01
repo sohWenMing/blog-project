@@ -23,6 +23,9 @@ function errorHandler(err, req, res, next) {
     if(err.name === 'CastError') {
         return(res.status(500).json({ error: 'Malformed id' }));
     }
+    if(err.name === 'BSONError') {
+        return(res.status(500).json({ error: 'the id searched for was not valid' }));
+    }
     next(err);
 }
 

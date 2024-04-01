@@ -7,7 +7,6 @@ const { requestLogger, errorLogger, errorHandler } = require('./utils/middleware
 app.use(express.json());
 app.use(requestLogger);
 
-console.log(connectToDB);
 connectToDB();
 // ------------------------------request logger -----------------------------------------
 

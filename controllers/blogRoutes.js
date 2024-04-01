@@ -1,6 +1,10 @@
 const express = require('express');
 const blogRouter = express.Router();
-const { Post } = require('../models/index');
+const { Post, mongoose, mongooseUtils } = require('../models/index');
+
+console.log('mongooseUtils: ', mongooseUtils);
+const findPostById = mongooseUtils.convertStringToMongooseId;
+
 
 blogRouter.get('/', async(req, res, next) => {
     try {
@@ -14,14 +18,27 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.get('/:id', async(req, res, next) => {
     try{
-        const id = (req.params.id);
+        const id = findPostById(req.params.id);
         const post = await Post.findById(id);
-        console.log(post);
+        res.status(200).json(post);
     }
     catch(error) {
         next(error);
     }
 });
+
+blogRouter.delete('/:id', async(req, res, next) => {
+    try {
+        console.log('delete being hit');
+    }
+    catch(error) {
+        next(error);
+    }
+});
+
+
+
+
 
 
 module.exports = { blogRouter };

@@ -33,6 +33,7 @@ module.exports = {
         '@stylistic/js/no-trailing-spaces': 'error',
         'object-curly-spacing': [
             'error', 'always'
-        ]
+        ],
+        'no-unused-vars': 'off',
     }
 };
