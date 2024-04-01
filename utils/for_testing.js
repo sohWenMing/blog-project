@@ -12,7 +12,11 @@ function average(array) {
         return(acc + value);
     }
 
-    return(array.reduce(reducer, 0) / array.length).toFixed(2);
+    if(array.length === 0) {
+        return 0;
+    }
+
+    return(array.reduce(reducer, 0) / array.length);
 }
 
 module.exports = {

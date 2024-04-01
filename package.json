@@ -4,9 +4,9 @@
   "description": "Project for working on fullstackopen",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "lint": "npx eslint . --fix"
+    "lint": "npx eslint . --fix",
+    "test": "node --test"
   },
   "author": "Soh Wen Ming",
   "license": "MIT",
