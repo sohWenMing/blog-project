@@ -25,7 +25,26 @@ function favoriteBlog(blogPosts) {
 }
 
 function mostBlogs(blogPosts) {
+    let uniqueNames = [];
+    blogPosts.forEach((blog) => {
+        if(!uniqueNames.includes(blog.author)) {
+            uniqueNames.push(blog.author);
+        }
+    });
+    const authorToLikes = {};
+    uniqueNames.forEach((name) => {
+        authorToLikes[name] = 0;
+    });
+    uniqueNames.forEach((name) => {
+        blogPosts.forEach((blog) => {
+            if(name === blog.author) {
+                authorToLikes[name] += blog.likes;
+            }
+        });
+    });
+    console.log(authorToLikes);
 }
+
 
 module.exports = {
     dummy, getTotalLikes, favoriteBlog
