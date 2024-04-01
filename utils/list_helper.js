@@ -23,7 +23,32 @@ function favoriteBlog(blogPosts) {
     });
     return(favoriteBlog.length > 0 ? favoriteBlog[0] : undefined);
 }
-
+// const listWithMultipleBlog = [
+//     {
+//         _id: '5a422aa71b54a676234d17f8',
+//         title: 'Go To Statement Considered Harmful',
+//         author: 'Edsger W. Dijkstra',
+//         url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+//         likes: 5,
+//         __v: 0
+//     },
+//     {
+//         _id: '5a422aa71b54a676234d17f8',
+//         title: 'Go To Statement Considered Harmful',
+//         author: 'Edsger W. Dijkstra',
+//         url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+//         likes: 10,
+//         __v: 0
+//     },
+//     {
+//         _id: '5a422aa71b54a676234d17f2',
+//         title: 'Go To Statement Considered Harmful',
+//         author: 'Soh Wen Ming',
+//         url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+//         likes: 10,
+//         __v: 0
+//     }
+// ];
 function mostBlogs(blogPosts) {
     let uniqueNames = [];
     blogPosts.forEach((blog) => {
@@ -42,8 +67,22 @@ function mostBlogs(blogPosts) {
             }
         });
     });
-    console.log(authorToLikes);
+    let maxLikes = 0;
+    for(const [key, value] of Object.entries(authorToLikes)) {
+        if(value > maxLikes) {
+            maxLikes = value;
+        }
+    }
+    let returnedObject = {};
+    for(const [key, value] of Object.entries(authorToLikes)) {
+        if(value === maxLikes) {
+            returnedObject.author = key;
+            returnedObject.likes = value;
+        }
+    }
+    return(returnedObject);
 }
+
 
 
 module.exports = {
