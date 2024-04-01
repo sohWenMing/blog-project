@@ -2,8 +2,7 @@ const express = require('express');
 const blogRouter = express.Router();
 const { Post, mongoose, mongooseUtils } = require('../models/index');
 
-console.log('mongooseUtils: ', mongooseUtils);
-const findPostById = mongooseUtils.convertStringToMongooseId;
+const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
 
 
 blogRouter.get('/', async(req, res, next) => {
@@ -16,9 +15,45 @@ blogRouter.get('/', async(req, res, next) => {
     }
 });
 
+blogRouter.post('/', async(req, res, next) => {
+    try {
+        const postToSave  = new Post({
+            'title': req.body.title,
+            'author': req.body.author,
+            'url': req.body.url,
+            'likes': req.body.likes
+        });
+        const savedPost = await postToSave.save();
+        res.status(200).json(savedPost);
+
+    }
+    catch(error) {
+        next(error);
+    }
+});
+
+blogRouter.put('/:id', async(req, res, next) => {
+    try {
+        const id = convertStringToMongooseId(req.params.id);
+        const previousPost = await Post.findByIdAndUpdate(id, {
+            'title': req.body.title,
+            'author': req.body.author,
+            'url': req.body.url,
+            'likes': req.body.likes
+        });
+        const updatedPost = await Post.findById(id);
+        res.status(200).json({
+            previousPost, updatedPost
+        });
+    }
+    catch(error) {
+        next(error);
+    }
+});
+
 blogRouter.get('/:id', async(req, res, next) => {
     try{
-        const id = findPostById(req.params.id);
+        const id = convertStringToMongooseId(req.params.id);
         const post = await Post.findById(id);
         res.status(200).json(post);
     }
@@ -27,9 +62,14 @@ blogRouter.get('/:id', async(req, res, next) => {
     }
 });
 
+
+
 blogRouter.delete('/:id', async(req, res, next) => {
     try {
         console.log('delete being hit');
+        const id = convertStringToMongooseId(req.params.id);
+        const deletedPost = await Post.findByIdAndDelete(id);
+        res.status(200).json(deletedPost);
     }
     catch(error) {
         next(error);

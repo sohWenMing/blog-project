@@ -5,7 +5,9 @@ function requestLogger(req, res, next) {
     info('TimeStamp: ', new Date().toISOString());
     info('URL: ', req.url);
     info('Method: ',req.method);
+    info('Headers', req.headers);
     info('Body: ', req.body);
+
     // info('Request: ', req);
     info('----- Request Info End -----');
     next();
