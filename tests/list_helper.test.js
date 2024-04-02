@@ -1,4 +1,4 @@
-const { dummy, getTotalLikes, favoriteBlog } = require('../utils/list_helper');
+const { dummy, getTotalLikes, favoriteBlog, mostBlogs, favouriteAuthor } = require('../utils/list_helper');
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
@@ -59,7 +59,7 @@ describe('set of tests for getTotalLikes', () => {
         assert.strictEqual(getTotalLikes([]), 0);
     });
     test('testing for multiple blogposts', () => {
-        assert.strictEqual(getTotalLikes(listWithMultipleBlog), 15);
+        assert.strictEqual(getTotalLikes(listWithMultipleBlog), 25);
     });
 });
 
@@ -85,6 +85,37 @@ describe('set of tests for favoriteBlog', () => {
             url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
             likes: 10,
             __v: 0
+        });
+    });
+});
+
+describe('set of tests for mostBlog', () => {
+    test('testing for one blog record', () => {
+        assert.deepStrictEqual(mostBlogs(listWithOneBlog), { name: 'Edsger W. Dijkstra', blogs: 1 });
+    });
+    test('testing for no records', () => {
+        assert.deepStrictEqual(mostBlogs([]), undefined);
+    });
+    test('testing for multiple records', () => {
+        assert.deepStrictEqual(mostBlogs(listWithMultipleBlog), {
+            name: 'Edsger W. Dijkstra',
+            blogs: 2
+        });
+    });
+});
+
+describe('set of tests for favouriteAuthor', () => {
+    test('testing for one record', () => {
+        assert.deepStrictEqual(favouriteAuthor(listWithOneBlog), {
+            name: 'Edsger W. Dijkstra', likes: 5
+        });
+    });
+    test('testing for no records', () => {
+        assert.deepStrictEqual(favouriteAuthor([]), undefined);
+    });
+    test('testing for multiple records', () => {
+        assert.deepStrictEqual(favouriteAuthor(listWithMultipleBlog), {
+            name: 'Edsger W. Dijkstra', likes: 15
         });
     });
 });
