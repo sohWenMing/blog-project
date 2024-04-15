@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "nodemon index.js",
     "lint": "npx eslint . --fix",
-    "test": "NODE_ENV=test node --test"
+    "test": "cross-env NODE_ENV=test node --test"
   },
   "author": "Soh Wen Ming",
   "license": "MIT",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.2.4"
