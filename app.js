@@ -12,6 +12,9 @@ connectToDB();
 
 
 app.use('/api/blog', blogRouter);
+app.get('/', (req, res) => {
+    res.status(200).send('getting something from base route');
+});
 
 // ------------------------------error handler-----------------------------------------
 
@@ -20,3 +23,4 @@ app.use(errorHandler);
 module.exports = {
     app
 };
+
