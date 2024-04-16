@@ -2,7 +2,7 @@
 const { describe, it, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const { disconnectFromDB } = require('../models/index');
-const { createInitialPosts, createOnePost, deleteAll, getAll, createDuplicates, getAllUniqueIds, createOnePostNoLikes, createOneInitialPost, createMissingInfoList } = require('./test_helper');
+const { createInitialPosts, deleteAll, getAll, createDuplicates, getAllUniqueIds, createOnePostNoLikes, createOneInitialPost, createMissingInfoList, httpCreateOne, httpDeleteById, httpUpdateById } = require('./test_helper');
 const { http } = require('./test_helper');
 
 // const http = require('supertest')(app);
@@ -15,7 +15,7 @@ describe('suite of tests for database', async () =>
     });
     after(async () => {
         await deleteAll();
-        await disconnectFromDB();
+        // await disconnectFromDB();
     });
     it('connecting to main url should work', async() => {
         await http.get('/api/blog')
@@ -49,5 +49,32 @@ describe('suite of tests for database', async () =>
     });
     it('saving without title or url should result in error', async() => {
         await createMissingInfoList();
+    });
+});
+
+describe('testing for deleting and updating of posts', async() => {
+    beforeEach(async() => {
+        await deleteAll();
+    });
+    after(async () => {
+        await deleteAll();
+        await disconnectFromDB();
+    });
+    it('creating of one post and deleting of one post should work', async() => {
+        //first i need to create the post through a http method
+        const jsonResponse = await httpCreateOne();
+        const returnedId = jsonResponse.id;
+        await httpDeleteById(returnedId);
+        const allPosts = await getAll();
+        assert.strictEqual(allPosts.length, 0);
+    });
+    it('updating of a post should work', async() => {
+        const jsonResponse = await httpCreateOne();
+        const previousPost = jsonResponse;
+        const returnedId = jsonResponse.id;
+        const updatedJsonResponse = await httpUpdateById(returnedId);
+        const updatedPost = updatedJsonResponse.updatedPost;
+        assert.strictEqual(previousPost.id, updatedPost.id);
+        assert.notDeepStrictEqual(previousPost, updatedPost);
     });
 });

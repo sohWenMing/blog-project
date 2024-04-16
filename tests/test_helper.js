@@ -131,13 +131,32 @@ async function getAllUniqueIds() {
     const returnedIds = mapIdsFromJsonResponse(jsonResponse);
     console.log('returnedIds from getAllUniqueIds: ', returnedIds);
     const uniqueIds = [...new Set(returnedIds)];
-    return { returnedIds, uniqueIds };
+    const returnedObject = {
+        returnedIds, uniqueIds
+    };
+    return returnedObject;
 }
 
 async function createMissingInfoList() {
     listWithMissingInfo.forEach(async(blog) => {
         await http.post('/api/blog').send(blog).expect(500);
     });
+}
+
+async function httpCreateOne() {
+    const jsonResponse = await http.post('/api/blog').send(listWithOneBlog[0]).expect(200);
+    const jsonBody = jsonResponse.body;
+    return jsonBody;
+}
+
+async function httpDeleteById(id) {
+    await http.delete(`/api/blog/${id}`);
+}
+
+async function httpUpdateById(id) {
+    const updatedResponse = await http.put(`/api/blog/${id}`).send(listWithMultipleBlog[2]).expect(200);
+    const jsonBody = updatedResponse.body;
+    return jsonBody;
 }
 
 module.exports = {
@@ -152,5 +171,8 @@ module.exports = {
     getAllUniqueIds,
     createOnePostNoLikes,
     createOneInitialPost,
-    createMissingInfoList
+    createMissingInfoList,
+    httpCreateOne,
+    httpDeleteById,
+    httpUpdateById
 };
