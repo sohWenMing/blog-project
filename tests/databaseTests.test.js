@@ -1,11 +1,12 @@
-const { app } = require('../app');
+// const { app } = require('../app');
 const { describe, it, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const { disconnectFromDB } = require('../models/index');
-const { createInitialPosts, createOnePost, deleteAll, getAll } = require('./test_helper');
+const { createInitialPosts, createOnePost, deleteAll, getAll, createDuplicates, getAllUniqueIds, createOnePostNoLikes, createOneInitialPost, createMissingInfoList } = require('./test_helper');
+const { http } = require('./test_helper');
 
+// const http = require('supertest')(app);
 
-const http = require('supertest')(app);
 
 describe('suite of tests for database', async () =>
 {
@@ -21,26 +22,32 @@ describe('suite of tests for database', async () =>
             .expect(200);
     });
     it('saving one record should work', async() => {
-        createOnePost();
+        createOneInitialPost();
         const allPosts = await getAll();
-        assert(allPosts.length, 1);
+        assert.strictEqual(allPosts.length, 1);
     });
     it('saving multiple records should work', async() => {
         await createInitialPosts();
         const allPosts = await getAll();
-        console.log('allPosts: ', allPosts);
-        assert(allPosts.length, 2);
+        assert.strictEqual(allPosts.length, 3);
     });
     it('ids returned should be unique', async() => {
         await createInitialPosts();
-        const jsonResponse = await http.get('/api/blog').expect(200).expect('Content-Type', /application\/json/);
-        console.log(jsonResponse.body);
-        const returnedIds = jsonResponse.body.map((response) => {
-            return(response.id);
-        }); 
-        console.log('returnedIds', returnedIds);
-        const uniqueIds = [...new Set(returnedIds)];
+        const { returnedIds, uniqueIds } = await getAllUniqueIds();
         assert.strictEqual(returnedIds.length, uniqueIds.length);
     });
-
+    it('saving duplicates should still result in unique ids', async() => {
+        await createDuplicates();
+        const ids = await getAllUniqueIds();
+        const uniqueIds = ids.uniqueIds;
+        assert.strictEqual(uniqueIds.length, 2);
+    });
+    it('saving a post with no likes should default to 0 likes', async() => {
+        await createOnePostNoLikes();
+        const allPosts = await getAll();
+        assert.strictEqual(allPosts[0].likes, 0);
+    });
+    it('saving without title or url should result in error', async() => {
+        await createMissingInfoList();
+    });
 });

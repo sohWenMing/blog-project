@@ -1,5 +1,12 @@
 const { Post } = require('../models');
 const PostService = require('../service/posts');
+const { app } = require('../app');
+const http = require('supertest')(app);
+
+async function httpGetAllRecords() {
+    const jsonResponse = await http.get('/api/blog').expect(200).expect('Content-Type', /application\/json/);
+    return jsonResponse;
+}
 
 const listWithOneBlog = [
     {
@@ -31,6 +38,48 @@ const listWithMultipleBlog = [
     }
 ];
 
+const listWithDuplicateBlogs = [
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+    },
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+    }
+];
+
+const listWithMissingInfo = [
+    {
+        // title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+    },
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        // url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+    },
+    {
+        title: '',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+    },
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: '',
+        likes: 5,
+    }
+];
+
 async function createInitialPosts() {
     const promiseArray = listWithMultipleBlog.map((blog) => {
         PostService.save(blog);
@@ -38,8 +87,20 @@ async function createInitialPosts() {
     await Promise.all(promiseArray);
 }
 
-async function createOnePost() {
-    await PostService.save(listWithOneBlog[0]);
+async function createOnePost(post) {
+    await PostService.save(post);
+}
+
+async function createOneInitialPost() {
+    await createOnePost(listWithOneBlog[0]);
+}
+
+async function createOnePostNoLikes() {
+    await PostService.save({
+        title: 'this one has no likes',
+        author: 'Me',
+        url: 'http://www.google.com'
+    });
 }
 
 async function deleteAll() {
@@ -51,6 +112,45 @@ async function getAll() {
     return allPosts;
 }
 
+async function createDuplicates() {
+    const promiseArray = listWithDuplicateBlogs.map((blog) => {
+        PostService.save(blog);
+    });
+    await Promise.all(promiseArray);
+}
+
+function mapIdsFromJsonResponse(jsonResponse) {
+    const returnedIds = jsonResponse.body.map((response) => {
+        return(response.id);
+    });
+    return returnedIds;
+}
+
+async function getAllUniqueIds() {
+    const jsonResponse = await httpGetAllRecords();
+    const returnedIds = mapIdsFromJsonResponse(jsonResponse);
+    console.log('returnedIds from getAllUniqueIds: ', returnedIds);
+    const uniqueIds = [...new Set(returnedIds)];
+    return { returnedIds, uniqueIds };
+}
+
+async function createMissingInfoList() {
+    listWithMissingInfo.forEach(async(blog) => {
+        await http.post('/api/blog').send(blog).expect(500);
+    });
+}
+
 module.exports = {
-    createInitialPosts, createOnePost, deleteAll, getAll
+    createInitialPosts,
+    createOnePost,
+    deleteAll,
+    getAll,
+    createDuplicates,
+    httpGetAllRecords,
+    http,
+    mapIdsFromJsonResponse,
+    getAllUniqueIds,
+    createOnePostNoLikes,
+    createOneInitialPost,
+    createMissingInfoList
 };

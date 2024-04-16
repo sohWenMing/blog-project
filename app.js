@@ -23,7 +23,9 @@ app.get('/', (req, res) => {
 // ------------------------------error handler-----------------------------------------
 
 // app.use(errorLogger);
-app.use(errorHandler);
+if(process.env.NODE_ENV !== 'test') {
+    app.use(errorHandler);
+};
 module.exports = {
     app
 };
