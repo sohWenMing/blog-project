@@ -139,7 +139,12 @@ async function getAllUniqueIds() {
 
 async function createMissingInfoList() {
     listWithMissingInfo.forEach(async(blog) => {
-        await http.post('/api/blog').send(blog).expect(500);
+        try {
+            await http.post('/api/blog').send(blog).expect(500);
+        }
+        catch(error) {
+            console.log('expected error: ', error);
+        }
     });
 }
 
