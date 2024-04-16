@@ -5,7 +5,11 @@ const { blogRouter } = require('./controllers/index');
 const { requestLogger, errorLogger, errorHandler } = require('./utils/middlewares');
 
 app.use(express.json());
-app.use(requestLogger);
+
+if(process.env.NODE_ENV !== 'test') {
+    app.use(requestLogger);
+}
+
 
 connectToDB();
 // ------------------------------request logger -----------------------------------------

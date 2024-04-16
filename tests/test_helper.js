@@ -1,3 +1,6 @@
+const { Post } = require('../models');
+const PostService = require('../service/posts');
+
 const listWithOneBlog = [
     {
         title: 'Go To Statement Considered Harmful',
@@ -28,6 +31,26 @@ const listWithMultipleBlog = [
     }
 ];
 
+async function createInitialPosts() {
+    const promiseArray = listWithMultipleBlog.map((blog) => {
+        PostService.save(blog);
+    });
+    await Promise.all(promiseArray);
+}
+
+async function createOnePost() {
+    await PostService.save(listWithOneBlog[0]);
+}
+
+async function deleteAll() {
+    await PostService.deleteAll();
+}
+
+async function getAll() {
+    const allPosts = await PostService.getAll();
+    return allPosts;
+}
+
 module.exports = {
-    listWithOneBlog, listWithMultipleBlog
+    createInitialPosts, createOnePost, deleteAll, getAll
 };

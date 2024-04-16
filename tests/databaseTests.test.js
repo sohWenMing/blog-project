@@ -1,18 +1,19 @@
 const { app } = require('../app');
 const { describe, it, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
-const { disconnectFromDB, Post } = require('../models/index');
-const PostService = require('../service/posts');
-const { listWithOneBlog, listWithMultipleBlog } = require('./test_helper');
+const { disconnectFromDB } = require('../models/index');
+const { createInitialPosts, createOnePost, deleteAll, getAll } = require('./test_helper');
+
 
 const http = require('supertest')(app);
 
-describe('is this first test running', async () =>
+describe('suite of tests for database', async () =>
 {
     beforeEach(async() => {
-        await PostService.deleteAll();
+        await deleteAll();
     });
     after(async () => {
+        await deleteAll();
         await disconnectFromDB();
     });
     it('connecting to main url should work', async() => {
@@ -20,15 +21,26 @@ describe('is this first test running', async () =>
             .expect(200);
     });
     it('saving one record should work', async() => {
-        const savedResponse = await PostService.save(listWithOneBlog[0]);
-        const allPosts = await PostService.getAll();
+        createOnePost();
+        const allPosts = await getAll();
         assert(allPosts.length, 1);
     });
     it('saving multiple records should work', async() => {
-        const blogPromises = listWithMultipleBlog.map((blog) => PostService.save(blog));
-        await Promise.all(blogPromises);
-        const allPosts = await PostService.getAll();
+        await createInitialPosts();
+        const allPosts = await getAll();
+        console.log('allPosts: ', allPosts);
         assert(allPosts.length, 2);
-
     });
+    it('ids returned should be unique', async() => {
+        await createInitialPosts();
+        const jsonResponse = await http.get('/api/blog').expect(200).expect('Content-Type', /application\/json/);
+        console.log(jsonResponse.body);
+        const returnedIds = jsonResponse.body.map((response) => {
+            return(response.id);
+        }); 
+        console.log('returnedIds', returnedIds);
+        const uniqueIds = [...new Set(returnedIds)];
+        assert.strictEqual(returnedIds.length, uniqueIds.length);
+    });
+
 });
