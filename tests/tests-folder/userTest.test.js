@@ -5,9 +5,6 @@ const { UserService } = require('../../service/users');
 const { usersList , shouldFailUsersList } = require('../helpers/usersHelper');
 const { disconnectFromDB } = require('../../models/connection');
 
-console.log("list: ", shouldFailUsersList);
-
-
 const baseUrl = '/api/users';
 
 describe('tests for creation of users', async() => {

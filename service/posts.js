@@ -5,7 +5,7 @@ class PostService {
         await Post.deleteMany({});
     }
     async getAll() {
-        const allPosts = await Post.find({});
+        const allPosts = await Post.find({}).populate('user');
         return allPosts;
     }
     async save(post) {

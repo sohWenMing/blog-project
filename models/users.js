@@ -14,10 +14,10 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String
     },
-    notes : [
+    posts : [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Note'
+            ref: 'Post'
         }
     ]
 });

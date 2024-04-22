@@ -5,10 +5,6 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    author: {
-        type: String,
-        required: true
-    },
     url: {
         type: String,
         required: true
@@ -16,6 +12,13 @@ const postSchema = new mongoose.Schema({
     likes: {
         type: Number,
         default: 0
+    },
+    author: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     }
 });
 
