@@ -2,11 +2,13 @@ const { describe, beforeEach, after, it } = require('node:test');
 const assert = require('node:assert');
 const http = require('../httpModule');
 const { UserService } = require('../../service/users');
-const { usersList } = require('../helpers/usersHelper');
+const { usersList , shouldFailUsersList } = require('../helpers/usersHelper');
 const { disconnectFromDB } = require('../../models/connection');
 
-const baseUrl = '/api/users';
+console.log("list: ", shouldFailUsersList);
 
+
+const baseUrl = '/api/users';
 
 describe('tests for creation of users', async() => {
     beforeEach(async() => {
@@ -37,5 +39,17 @@ describe('tests for creation of users', async() => {
             .expect(200)
             .expect('Content-Type', /application\/json/);
         assert.strictEqual(allUsers.body.length, 2);
+    });
+    it('a user with username too short should not save', async() => {
+        const { body } = await http.post(baseUrl)
+            .send(shouldFailUsersList[0])
+            .expect(400);
+        assert.strictEqual(body.error, 'username has to be minimum 5 characters');
+    });
+    it('password with less than 5 characters should not save', async() => {
+        const { body } = await http.post(baseUrl)
+            .send(shouldFailUsersList[1])
+            .expect(400);
+        assert.strictEqual(body.error, 'Password has to be at least 5 characters');
     });
 });

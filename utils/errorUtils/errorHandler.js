@@ -15,6 +15,14 @@ function errorHandler(err, req, res, next) {
     if(err.name === 'MongoServerError' && err.message.includes('E11000 duplicate key')){
         return res.status(400).json({ error: 'That username is not available' });
     }
+    if(err.name === 'ValidationError') {
+        if(err.message.includes('username')) {
+            return res.status(400).json({ error: 'username has to be minimum 5 characters' });
+        }
+        if(err.message.includes('Password')) {
+            return res.status(400).json({ error: err.message });
+        }
+    }
 }
 
 module.exports = { errorHandler };

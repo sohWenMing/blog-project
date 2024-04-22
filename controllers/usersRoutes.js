@@ -20,6 +20,9 @@ usersRouter.post('/', async(req, res, next) => {
         if(!username || !name || !password) {
             generateAndThrowError('MandatoryInfoNotFilledError', 'Mandatory information not filled');
         }
+        if(password.length < 5) {
+            generateAndThrowError('ValidationError', 'Password has to be at least 5 characters');
+        }
         const savedUser = await UserService.save(req.body);
         res.status(200).json(savedUser);
     }
