@@ -9,6 +9,11 @@ class UserService {
     async deleteAll() {
         await User.deleteMany({});
     }
+
+    async getAll() {
+        const allUsers = await User.find({});
+        return allUsers;
+    }
 }
 
 module.exports = {

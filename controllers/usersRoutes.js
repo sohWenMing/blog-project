@@ -6,7 +6,8 @@ const { UserService } = require('../service/users');
 
 usersRouter.get('/', async(req, res, next) => {
     try {
-        res.send('getting something from /api/users');
+        const allUsers = await UserService.getAll();
+        res.status(200).json(allUsers);
     }
     catch(err) {
         next(err);
@@ -19,14 +20,7 @@ usersRouter.post('/', async(req, res, next) => {
         if(!username || !name || !password) {
             generateAndThrowError('MandatoryInfoNotFilledError', 'Mandatory information not filled');
         }
-        const passwordHash = await generateHash(password);
-        const userToSave = {
-            username: username,
-            name: name,
-            passwordHash: passwordHash,
-            notes: []
-        };
-        const savedUser = await UserService.save(userToSave);
+        const savedUser = await UserService.save(req.body);
         res.status(200).json(savedUser);
     }
     catch(error) {
