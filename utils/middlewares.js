@@ -20,16 +20,4 @@ function errorLogger(err) {
     error('Error Stack: ', err.stack);
 }
 
-function errorHandler(err, req, res, next) {
-    errorLogger(err);
-    if(err.name === 'CastError') {
-        return(res.status(500).json({ error: 'Malformed id' }));
-    }
-    if(err.name === 'BSONError') {
-        return(res.status(500).json({ error: 'the id searched for was not valid' }));
-    }
-    next(err);
-}
-
-
-module.exports = { requestLogger, errorLogger, errorHandler };
+module.exports = { requestLogger, errorLogger };

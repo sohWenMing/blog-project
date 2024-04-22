@@ -4,7 +4,6 @@ const { Post, mongoose, mongooseUtils } = require('../models/index');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
 
-
 blogRouter.get('/', async(req, res, next) => {
     try {
         const posts = await Post.find({});

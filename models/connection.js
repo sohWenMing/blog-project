@@ -6,7 +6,6 @@ mongoose.set('strictQuery', false);
 
 async function connectToDB() {
     try {
-        console.log('url', url);
         await mongoose.connect(url);
         info('Connected to MongoDB');
     }
