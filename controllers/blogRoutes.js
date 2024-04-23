@@ -5,13 +5,15 @@ const PostService = require('../service/posts');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
 
+
 blogRouter.get('/', async(req, res, next) => {
     try {
         const posts = await PostService.getAll();
-        const post = posts[0];
-        const postJson = await post.toJSON();
-        console.log("postJSON: ", postJson);
-
+        const postPromises = posts.map((post) => {
+            return post.toJSON();
+        });
+        const postJsonArray = await Promise.all(postPromises);
+        res.status(200).json(postJsonArray);
     }
     catch(error) {
         next(error);

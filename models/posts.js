@@ -28,21 +28,15 @@ postSchema.set('toJSON', {
         delete returnedObject.__v;
         delete returnedObject._id;
 
-
-        console.log("type of user object", typeof(document.user));
-
         await document.populate('user', { username: 1, name: 1 });
 
-        
         const userData = {
             id: document.user._id.toString(),
             username: document.user.username,
             name: document.user.name,
         }
 
-        console.log("userData :", userData);
-        console.log("document: ", document);
-        console.log("returned object: ", returnedObject);
+        returnedObject.user = userData;
         return returnedObject;
     }
 });

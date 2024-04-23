@@ -30,8 +30,10 @@ describe('suite of tests for posts', async() => {
         const userToUpdate = await UserService.findById(savedPost.user._id);
         userToUpdate.posts = userToUpdate.posts.concat(savedPost._id);
         await UserService.update(userToUpdate);
-        const allPosts = await http.get('/api/blog').expect(200);
-        console.log("allposts.body: ", allPosts.body);
+        const allPosts = await http.get('/api/blog')
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+        assert.strictEqual(allPosts.body[0].user.id, userId.toString());
 
     });
 });
