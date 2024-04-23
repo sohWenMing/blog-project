@@ -7,7 +7,7 @@ const { postsList } = require('../helpers/postsHelper');
 const assert = require('node:assert');
 const http = require('../httpModule');
 const { User } = require('../../models/users');
-const { first } = require('lodash');
+const { first, create } = require('lodash');
 
 
 async function createAndRelateUserAndPost() {
@@ -25,7 +25,21 @@ async function createAndRelateUserAndPost() {
         savedUser,
         savedPost
     });
-};
+}
+
+async function createAndLoginUser() {
+    const savedUser = await http.post('/api/users')
+        .send(usersList[0])
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+    const tokenResponse = await http.post('/login')
+        .send({
+            username: usersList[0].username,
+            password: usersList[0].password
+        });
+    return ({ savedUser, tokenResponse });
+}
 
 describe('suite of tests for posts', async() => {
     beforeEach(async() => {
@@ -37,33 +51,30 @@ describe('suite of tests for posts', async() => {
         await disconnectFromDB();
     });
     it('should be integrated between users and posts', async() => {
-        const savedUser = await http.post('/api/users')
-            .send(usersList[0])
-            .expect(200)
-            .expect('Content-Type', /application\/json/);
-
-        const tokenResponse = await http.post('/login')
-            .send({
-                username: usersList[0].username,
-                password: usersList[0].password
-            });
+        const { savedUser, tokenResponse } = await createAndLoginUser();
 
         const postToSave = {
             ...postsList[0],
-            token: tokenResponse.body.token
         };
 
         const savedPost = await http.post('/api/blog')
+            .set('Authorization', `Bearer ${tokenResponse.body.token}`)
             .send(postToSave)
             .expect(200)
             .expect('Content-Type', /application\/json/);
         const allUsers = await http.get('/api/users');
         const userToCheck = allUsers.body[0];
-        console.log(userToCheck.posts);
         assert.strictEqual(userToCheck.posts.length, 1);
         assert.strictEqual(userToCheck.posts[0].id, savedPost.body.id);
         const allPosts = await http.get('/api/blog');
         const postToCheck = allPosts.body[0];
         assert.strictEqual(userToCheck.id, postToCheck.user.id);
+    });
+    it('without a valid token, should raise JsonWebTokenError', async() => {
+        const { savedUser, tokenResponse } = await createAndLoginUser();
+        const token = tokenResponse.body.token + '123';
+        await http.post('/api/blog')
+            .set('Authorization', `Bearer ${token}`)
+            .expect(400);
     });
 });

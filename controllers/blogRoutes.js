@@ -3,10 +3,14 @@ const blogRouter = express.Router();
 const { Post, mongoose, mongooseUtils } = require('../models/index');
 const PostService = require('../service/posts');
 const { UserService } = require('../service/users');
-const { verifyToken } = require('../utils/auth/index');
+const { verifyToken, getTokenFromHeader } = require('../utils/auth/index');
 const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
+
+// blogRouter.post('/tokenTest', async(req, res, next) => {
+//     console.log("token test ran");
+// });
 
 
 blogRouter.get('/', async(req, res, next) => {
@@ -25,8 +29,7 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
     try {
-        const decodedToken = verifyToken(req.body.token);
-        console.log('decoded token: ', decodedToken);
+        const decodedToken = verifyToken(req.token);
         const userUpdatingPost = await UserService.findById(decodedToken.data);
         if(!userUpdatingPost) {
             generateAndThrowError('UserNotFoundError', 'There was a problem with the request');

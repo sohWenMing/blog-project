@@ -19,7 +19,6 @@ Content-Type: application/json
     "userId": "66275375101e4d1a72f817b6"
 }
 
-
 ###
 
 POST http://localhost:3000/login 
@@ -29,4 +28,10 @@ Content-Type: application/json
     "username": "baseUser",
     "password": "Holoq123holoq123"
 }
+
+###
+POST http://localhost:3000/api/blog
+
+Content-Type: application/json 
+Authorization: 'Bearer sometoken'
 

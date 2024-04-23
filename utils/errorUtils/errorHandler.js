@@ -24,14 +24,20 @@ function errorHandler(err, req, res, next) {
         }
     }
     if(err.name === 'PageNotFoundError') {
-        return res.status(400).json({error: err.message});
+        return res.status(400).json({ error: err.message });
     }
     if(err.name === 'UserNotFoundError') {
-        return res.status(400).json({error: err.message});
+        return res.status(400).json({ error: err.message });
     }
     if(err.name === 'WrongPasswordError') {
-        return res.status(400).json({error: err.message});
+        return res.status(400).json({ error: err.message });
     }
+    if(err.name === 'JsonWebTokenError') {
+        return res.status(400).json( { error: 'There was a problem with the request' } );
+    }
+    return res.status(400).json({
+        error: 'There was a problem with the request'
+    });
 }
 
 module.exports = { errorHandler };

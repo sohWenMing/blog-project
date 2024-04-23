@@ -34,7 +34,7 @@ postSchema.set('toJSON', {
             id: document.user._id.toString(),
             username: document.user.username,
             name: document.user.name,
-        }
+        };
 
         returnedObject.user = userData;
         return returnedObject;
