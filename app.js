@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 const { connectToDB } = require('./models/index');
-const { blogRouter, usersRouter } = require('./controllers/index');
-
+const { blogRouter, usersRouter, loginRouter } = require('./controllers/index');
 const { requestLogger } = require('./utils/middlewares');
 const { errorHandler } = require('./utils/errorUtils');
+const { generateAndThrowError } = require('./utils/errorUtils/errorGenerator');
 
 app.use(express.json());
 if(process.env.NODE_ENV !== 'test') {
@@ -16,6 +16,18 @@ connectToDB();
 
 app.use('/api/users', usersRouter);
 app.use('/api/blog', blogRouter);
+app.use('/login', loginRouter);
+app.use('/', (req, res) => {
+    res.json({message: 'this is the placeholder for the front end'});
+});
+app.all('*', async(req, res, next) => {
+    try {
+        generateAndThrowError('PageNotFoundError', 'The url could not be found');
+    }
+    catch(error) {
+        next(error);
+    }
+});
 
 // ------------------------------error handler-----------------------------------------
 

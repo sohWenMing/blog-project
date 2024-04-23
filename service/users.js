@@ -35,6 +35,11 @@ class UserService {
         const userToUpdate = await User.findById(id);
         return userToUpdate;
     }
+
+    async findByUserName(username) {
+        const foundUser = await User.findOne({username: username});
+        return foundUser;
+    }
 }
 
 module.exports = {

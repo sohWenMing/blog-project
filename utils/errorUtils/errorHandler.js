@@ -23,6 +23,15 @@ function errorHandler(err, req, res, next) {
             return res.status(400).json({ error: err.message });
         }
     }
+    if(err.name === 'PageNotFoundError') {
+        return res.status(400).json({error: err.message});
+    }
+    if(err.name === 'UserNotFoundError') {
+        return res.status(400).json({error: err.message});
+    }
+    if(err.name === 'WrongPasswordError') {
+        return res.status(400).json({error: err.message});
+    }
 }
 
 module.exports = { errorHandler };

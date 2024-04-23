@@ -2,6 +2,9 @@ const express = require('express');
 const blogRouter = express.Router();
 const { Post, mongoose, mongooseUtils } = require('../models/index');
 const PostService = require('../service/posts');
+const { UserService } = require('../service/users');
+const { verifyToken } = require('../utils/auth/index');
+const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
 
@@ -22,16 +25,23 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
     try {
+        const decodedToken = verifyToken(req.body.token);
+        console.log('decoded token: ', decodedToken);
+        const userUpdatingPost = await UserService.findById(decodedToken.data);
+        if(!userUpdatingPost) {
+            generateAndThrowError('UserNotFoundError', 'There was a problem with the request');
+        }
         const postToSave  = {
             'title': req.body.title,
             'author': req.body.author,
             'url': req.body.url,
             'likes': req.body.likes,
-            'userId': req.body.userId
+            'userId': decodedToken.data
         };
         const savedPost = await PostService.save(postToSave);
         const savedPostJson = await savedPost.toJSON();
         res.status(200).json(savedPostJson);
+        // res.status(200).json({message: 'still testing'});
 
     }
     catch(error) {

@@ -1,5 +1,6 @@
-const { generateHash } = require('./bcryptUtils');
+const { generateHash, checkPassword } = require('./bcryptUtils');
+const { signToken, verifyToken } = require('./jwt');
 
 module.exports = {
-    generateHash
+    generateHash, checkPassword, signToken, verifyToken
 };

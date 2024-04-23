@@ -41,10 +41,18 @@ describe('suite of tests for posts', async() => {
             .send(usersList[0])
             .expect(200)
             .expect('Content-Type', /application\/json/);
+
+        const tokenResponse = await http.post('/login')
+            .send({
+                username: usersList[0].username,
+                password: usersList[0].password
+            });
+
         const postToSave = {
             ...postsList[0],
-            userId: savedUser.body.id
+            token: tokenResponse.body.token
         };
+
         const savedPost = await http.post('/api/blog')
             .send(postToSave)
             .expect(200)
