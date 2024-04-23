@@ -16,7 +16,7 @@ class PostService {
             url: post.url,
             likes: post.likes,
             author: post.author,
-            user: postUser._id
+            user: postUser._id 
         });
         const savedPost = await postToSave.save();
         postUser.posts = postUser.posts.concat(savedPost._id);

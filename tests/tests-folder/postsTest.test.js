@@ -15,7 +15,7 @@ async function createAndRelateUserAndPost() {
     const userId = savedUser._id;
     const postToSave = {
         ...postsList[0],
-        user: userId
+        userId: userId.toString()
     };
     const savedPost = await PostService.save(postToSave);
     const userToUpdate = await UserService.findById(savedPost.user._id);
@@ -36,12 +36,26 @@ describe('suite of tests for posts', async() => {
     after(async() => {
         await disconnectFromDB();
     });
-    it('user should have populated posts', async() => {
-        await createAndRelateUserAndPost();
-        const allUsers = await http.get('/api/users')
+    it('should be integrated between users and posts', async() => {
+        const savedUser = await http.post('/api/users')
+            .send(usersList[0])
             .expect(200)
             .expect('Content-Type', /application\/json/);
-        console.log('all users response: ', allUsers.body);
-        console.log('all users posts: ', allUsers.body[0].posts);
+        const postToSave = {
+            ...postsList[0],
+            userId: savedUser.body.id
+        };
+        const savedPost = await http.post('/api/blog')
+            .send(postToSave)
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+        const allUsers = await http.get('/api/users');
+        const userToCheck = allUsers.body[0];
+        console.log(userToCheck.posts);
+        assert.strictEqual(userToCheck.posts.length, 1);
+        assert.strictEqual(userToCheck.posts[0].id, savedPost.body.id);
+        const allPosts = await http.get('/api/blog');
+        const postToCheck = allPosts.body[0];
+        assert.strictEqual(userToCheck.id, postToCheck.user.id);
     });
 });
