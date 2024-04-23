@@ -28,7 +28,9 @@ usersRouter.post('/', async(req, res, next) => {
             generateAndThrowError('ValidationError', 'Password has to be at least 5 characters');
         }
         const savedUser = await UserService.save(req.body);
-        res.status(200).json(savedUser);
+        console.log('savedUser in route : ', savedUser);
+        const savedUserJson = await savedUser.toJSON();
+        res.status(200).json(savedUserJson);
     }
     catch(error) {
         next(error);

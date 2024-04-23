@@ -22,14 +22,16 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
     try {
-        const postToSave  = new Post({
+        const postToSave  = {
             'title': req.body.title,
             'author': req.body.author,
             'url': req.body.url,
-            'likes': req.body.likes
-        });
-        const savedPost = await postToSave.save();
-        res.status(200).json(savedPost);
+            'likes': req.body.likes,
+            'userId': req.body.userId
+        };
+        const savedPost = await PostService.save(postToSave);
+        const savedPostJson = await savedPost.toJSON();
+        res.status(200).json(savedPostJson);
 
     }
     catch(error) {

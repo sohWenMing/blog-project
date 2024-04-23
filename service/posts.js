@@ -1,4 +1,5 @@
 const { Post } = require('../models/index');
+const { UserService } = require('./users');
 
 class PostService {
     async deleteAll() {
@@ -9,8 +10,17 @@ class PostService {
         return allPosts;
     }
     async save(post) {
-        const newPost = new Post(post);
-        const savedPost = await newPost.save();
+        const postUser = await UserService.findById(post.userId);
+        const postToSave = new Post({
+            title: post.title,
+            url: post.url,
+            likes: post.likes,
+            author: post.author,
+            user: postUser._id
+        });
+        const savedPost = await postToSave.save();
+        postUser.posts = postUser.posts.concat(savedPost._id);
+        await UserService.update(postUser);
         return savedPost;
     }
 }
