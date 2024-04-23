@@ -2,16 +2,10 @@ const express = require('express');
 const blogRouter = express.Router();
 const { Post, mongooseUtils } = require('../models/index');
 const PostService = require('../service/posts');
-const { UserService } = require('../service/users');
-const { verifyToken } = require('../jwt/jwt');
 const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
+const { decodeTokenAndReturnUser } = require('../routingHelpers/blogRouteHelper');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
-
-// blogRouter.post('/tokenTest', async(req, res, next) => {
-//     console.log("token test ran");
-// });
-
 
 blogRouter.get('/', async(req, res, next) => {
     try {
@@ -29,9 +23,9 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
     try {
-        const decodedToken = verifyToken(req.token);
-        const userUpdatingPost = await UserService.findById(decodedToken.data);
-        if(!userUpdatingPost) {
+
+        const { userId, user } = await decodeTokenAndReturnUser(req.token);
+        if(!user) {
             generateAndThrowError('UserNotFoundError', 'There was a problem with the request');
         }
         const postToSave  = {
@@ -39,13 +33,11 @@ blogRouter.post('/', async(req, res, next) => {
             'author': req.body.author,
             'url': req.body.url,
             'likes': req.body.likes,
-            'userId': decodedToken.data
+            'userId': userId
         };
         const savedPost = await PostService.save(postToSave);
         const savedPostJson = await savedPost.toJSON();
         res.status(200).json(savedPostJson);
-        // res.status(200).json({message: 'still testing'});
-
     }
     catch(error) {
         next(error);
