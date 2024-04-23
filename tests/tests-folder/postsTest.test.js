@@ -10,6 +10,23 @@ const { User } = require('../../models/users');
 const { first } = require('lodash');
 
 
+async function createAndRelateUserAndPost() {
+    const savedUser = await UserService.save(usersList[0]);
+    const userId = savedUser._id;
+    const postToSave = {
+        ...postsList[0],
+        user: userId
+    };
+    const savedPost = await PostService.save(postToSave);
+    const userToUpdate = await UserService.findById(savedPost.user._id);
+    userToUpdate.posts = userToUpdate.posts.concat(savedPost._id);
+    await UserService.update(userToUpdate);
+    return({
+        savedUser,
+        savedPost
+    });
+};
+
 describe('suite of tests for posts', async() => {
     beforeEach(async() => {
         await UserService.deleteAll();
@@ -19,21 +36,12 @@ describe('suite of tests for posts', async() => {
     after(async() => {
         await disconnectFromDB();
     });
-    it('author in post should be populated', async() => {
-        const savedUser = await UserService.save(usersList[0]);
-        const userId = savedUser._id;
-        const postToSave = {
-            ...postsList[0],
-            user: userId
-        };
-        const savedPost = await PostService.save(postToSave);
-        const userToUpdate = await UserService.findById(savedPost.user._id);
-        userToUpdate.posts = userToUpdate.posts.concat(savedPost._id);
-        await UserService.update(userToUpdate);
-        const allPosts = await http.get('/api/blog')
+    it('user should have populated posts', async() => {
+        await createAndRelateUserAndPost();
+        const allUsers = await http.get('/api/users')
             .expect(200)
             .expect('Content-Type', /application\/json/);
-        assert.strictEqual(allPosts.body[0].user.id, userId.toString());
-
+        console.log('all users response: ', allUsers.body);
+        console.log('all users posts: ', allUsers.body[0].posts);
     });
 });

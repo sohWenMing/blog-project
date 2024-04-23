@@ -23,10 +23,27 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.set('toJSON', {
-    transform: async function(queried, returned) {
-        returned.id = queried._id.toString();
+    transform: async function(document, returned) {
+        returned.id = document._id.toString();
         delete returned._id;
         delete returned.__v;
+        delete returned.passwordHash;
+        await document.populate('posts')
+        const postArray = document.posts.map((post) => {
+            return (
+                {
+                    id: post._id.toString(),
+                    title: post.title,
+                    url: post.url,
+                    likes: post.likes,
+                    author: post.author
+                }
+            );
+        });
+        returned.posts = postArray;
+
+        return returned;
+
     }
 });
 

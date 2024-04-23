@@ -71,7 +71,6 @@ blogRouter.get('/:id', async(req, res, next) => {
 
 blogRouter.delete('/:id', async(req, res, next) => {
     try {
-        console.log('delete being hit');
         const id = convertStringToMongooseId(req.params.id);
         const deletedPost = await Post.findByIdAndDelete(id);
         res.status(200).json(deletedPost);

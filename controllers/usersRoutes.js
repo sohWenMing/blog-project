@@ -7,7 +7,11 @@ const { UserService } = require('../service/users');
 usersRouter.get('/', async(req, res, next) => {
     try {
         const allUsers = await UserService.getAll();
-        res.status(200).json(allUsers);
+        const usersPromisesArray = allUsers.map((user) => {
+            return user.toJSON();
+        });
+        const users = await Promise.all(usersPromisesArray);
+        res.status(200).json(users);
     }
     catch(err) {
         next(err);

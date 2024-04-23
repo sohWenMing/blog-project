@@ -27,8 +27,8 @@ postSchema.set('toJSON', {
         returnedObject.id = document._id.toString();
         delete returnedObject.__v;
         delete returnedObject._id;
-
         await document.populate('user', { username: 1, name: 1 });
+
 
         const userData = {
             id: document.user._id.toString(),

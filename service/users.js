@@ -11,7 +11,7 @@ class UserService {
             username: username,
             name: name,
             passwordHash: passwordHash,
-            notes: []
+            posts: []
         });
 
         const savedUser = await userToSave.save();
@@ -27,7 +27,7 @@ class UserService {
     }
 
     async getAll() {
-        const allUsers = await User.find({}).populate('posts');
+        const allUsers = await User.find({});
         return allUsers;
     }
 
