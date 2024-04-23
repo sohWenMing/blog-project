@@ -23,11 +23,10 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.set('toJSON', {
-    transform: function(queried, returned) {
-        returned.id = queried._id;
+    transform: async function(queried, returned) {
+        returned.id = queried._id.toString();
         delete returned._id;
         delete returned.__v;
-        delete returned.passwordHash;
     }
 });
 
