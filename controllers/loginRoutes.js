@@ -2,8 +2,8 @@ const express = require('express');
 const loginRouter = express.Router();
 const { UserService } = require('../service/users');
 const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
-const { checkPassword } = require('../utils/auth/bcryptUtils');
-const { signToken } = require('../utils/auth/jwt');
+const { checkPassword } = require('../bcrypt/bcryptUtils');
+const { signToken } = require('../jwt/jwt');
 
 loginRouter.get('/', (req, res) => {
     res.send('getting something from login route');

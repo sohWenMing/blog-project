@@ -5,7 +5,7 @@ const { blogRouter, usersRouter, loginRouter } = require('./controllers/index');
 const { requestLogger } = require('./utils/middlewares');
 const { errorHandler } = require('./utils/errorUtils');
 const { generateAndThrowError } = require('./utils/errorUtils/errorGenerator');
-const { getTokenFromHeader } = require('./utils/auth/jwt');
+const { getTokenFromHeader } = require('./jwt/jwt');
 
 app.use(express.json());
 if(process.env.NODE_ENV !== 'test') {

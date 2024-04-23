@@ -1,6 +1,5 @@
 const { User } = require('../models/users');
-const { generateHash } = require('../utils/auth/bcryptUtils');
-const mongoose = require('mongoose');
+const { generateHash } = require('../bcrypt/bcryptUtils');
 
 class UserService {
     async save(user) {

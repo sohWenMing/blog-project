@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const { generateAndThrowError } = require('../errorUtils/errorGenerator');
+const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
 
 async function generateHash(password) {
     const hash = await bcrypt.hash(password, saltRounds);

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { SECRET } = require('../config');
-const { NODE_ENV } = require('../config');
-const { info } = require('../logger');
+const { SECRET } = require('../utils/config');
+const { NODE_ENV } = require('../utils/config');
+const { info } = require('../utils/logger');
 
 function signToken(data) {
     const token = jwt.sign(

@@ -3,7 +3,7 @@ const blogRouter = express.Router();
 const { Post, mongooseUtils } = require('../models/index');
 const PostService = require('../service/posts');
 const { UserService } = require('../service/users');
-const { verifyToken } = require('../utils/auth/jwt');
+const { verifyToken } = require('../jwt/jwt');
 const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
