@@ -1,7 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
 const { generateAndThrowError } = require('../utils/errorUtils/index');
-const { generateHash } = require('../utils/auth/index');
 const { UserService } = require('../service/users');
 
 usersRouter.get('/', async(req, res, next) => {

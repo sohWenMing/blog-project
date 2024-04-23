@@ -1,5 +1,5 @@
 const { User } = require('../models/users');
-const { generateHash } = require('../utils/auth/index');
+const { generateHash } = require('../utils/auth/bcryptUtils');
 const mongoose = require('mongoose');
 
 class UserService {
@@ -37,7 +37,7 @@ class UserService {
     }
 
     async findByUserName(username) {
-        const foundUser = await User.findOne({username: username});
+        const foundUser = await User.findOne({ username: username });
         return foundUser;
     }
 }

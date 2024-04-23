@@ -1,9 +1,9 @@
 const express = require('express');
 const blogRouter = express.Router();
-const { Post, mongoose, mongooseUtils } = require('../models/index');
+const { Post, mongooseUtils } = require('../models/index');
 const PostService = require('../service/posts');
 const { UserService } = require('../service/users');
-const { verifyToken, getTokenFromHeader } = require('../utils/auth/index');
+const { verifyToken } = require('../utils/auth/jwt');
 const { generateAndThrowError } = require('../utils/errorUtils/errorGenerator');
 
 const convertStringToMongooseId = mongooseUtils.convertStringToMongooseId;
