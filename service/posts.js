@@ -23,6 +23,11 @@ class PostService {
         await UserService.update(postUser);
         return savedPost;
     }
+
+    async findById(id) {
+        const post = await Post.findById(id);
+        return post;
+    }
 }
 
 module.exports = new PostService;
