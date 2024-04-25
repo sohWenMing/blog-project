@@ -16,7 +16,7 @@ class PostService {
             url: post.url,
             likes: post.likes,
             author: post.author,
-            user: postUser._id 
+            user: postUser._id
         });
         const savedPost = await postToSave.save();
         postUser.posts = postUser.posts.concat(savedPost._id);
@@ -27,6 +27,12 @@ class PostService {
     async findById(id) {
         const post = await Post.findById(id);
         return post;
+    }
+
+    async deleteById(id) {
+        const postToDelete = await Post.findById(id);
+        const deleteResponse  = await Post.deleteOne({ _id: postToDelete._id });
+        return deleteResponse;
     }
 }
 

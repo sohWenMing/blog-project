@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { SECRET } = require('../utils/config');
 const { NODE_ENV } = require('../utils/config');
 const { info } = require('../utils/logger');
+const { generateAndThrowError } =require('../utils/errorUtils/errorGenerator');
 
 function signToken(data) {
     const token = jwt.sign(
@@ -23,6 +24,7 @@ function getTokenFromHeader(req, res, next) {
     if(NODE_ENV === 'test') {
         info(`getTokenFromHeader ran authorization: ${authorization} url: ${req.url}` );
     }
+
     if(authorization && authorization.includes('Bearer')) {
         let token = req.headers.authorization;
         token = token.replace('Bearer ', '');

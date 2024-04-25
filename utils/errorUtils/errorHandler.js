@@ -38,6 +38,9 @@ function errorHandler(err, req, res, next) {
     if(err.name === 'BlogpostNotFoundError') {
         return res.status(400).json({ error: err.message });
     }
+    if(err.name === 'AuthorizationError') {
+        return res.status(401).json({ error: 'There was a problem with the request' });
+    }
     return res.status(400).json({
         error: 'There was a problem with the request'
     });

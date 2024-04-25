@@ -23,11 +23,7 @@ blogRouter.get('/', async(req, res, next) => {
 
 blogRouter.post('/', async(req, res, next) => {
     try {
-
         const { userId, user } = await decodeTokenAndReturnUser(req.token);
-        if(!user) {
-            generateAndThrowError('UserNotFoundError', 'There was a problem with the request');
-        }
         const postToSave  = {
             'title': req.body.title,
             'author': req.body.author,
@@ -78,9 +74,17 @@ blogRouter.get('/:id', async(req, res, next) => {
 
 blogRouter.delete('/:id', async(req, res, next) => {
     try {
-        const id = convertStringToMongooseId(req.params.id);
-        const deletedPost = await Post.findByIdAndDelete(id);
-        res.status(200).json(deletedPost);
+        const { userId, user } = await decodeTokenAndReturnUser(req.token);
+        const postId = req.params.id;
+        const postToDelete = await PostService.findById(postId);
+        const postToDeleteJson = await postToDelete.toJSON();
+        console.log("userId: ", userId);
+        console.log("postToDeleteJson: ", postToDeleteJson);
+        if(userId !== postToDeleteJson.user.id) {
+            generateAndThrowError('AuthorizationError', 'User is not authorized');
+        }
+        const deleteResponse = await PostService.deleteById(postId);
+        res.status(200).json(deleteResponse);
     }
     catch(error) {
         next(error);
