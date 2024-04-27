@@ -78,8 +78,6 @@ blogRouter.delete('/:id', async(req, res, next) => {
         const postId = req.params.id;
         const postToDelete = await PostService.findById(postId);
         const postToDeleteJson = await postToDelete.toJSON();
-        console.log("userId: ", userId);
-        console.log("postToDeleteJson: ", postToDeleteJson);
         if(userId !== postToDeleteJson.user.id) {
             generateAndThrowError('AuthorizationError', 'User is not authorized');
         }

@@ -33,7 +33,7 @@ function errorHandler(err, req, res, next) {
         return res.status(400).json({ error: err.message });
     }
     if(err.name === 'JsonWebTokenError') {
-        return res.status(400).json( { error: 'There was a problem with the request' } );
+        return res.status(401).json( { error: 'There was a problem with the request' } );
     }
     if(err.name === 'BlogpostNotFoundError') {
         return res.status(400).json({ error: err.message });

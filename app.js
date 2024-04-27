@@ -14,9 +14,9 @@ if(process.env.NODE_ENV !== 'test') {
 
 connectToDB();
 // ------------------------------request logger -----------------------------------------
-app.use('/', getTokenFromHeader);
+// app.use('/', getTokenFromHeader);
 app.use('/api/users', usersRouter);
-app.use('/api/blog', blogRouter);
+app.use('/api/blog', getTokenFromHeader, blogRouter);
 app.use('/login', loginRouter);
 app.use('/', (req, res) => {
     res.json({ message: 'this is the placeholder for the front end' });

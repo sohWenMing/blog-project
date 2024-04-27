@@ -70,12 +70,12 @@ describe('suite of tests for posts', async() => {
         const tokenWrong = token + '123';
         await http.post('/api/blog')
             .set('Authorization', `Bearer ${tokenWrong}`)
-            .expect(400);
+            .expect(401);
     });
 
     it('you should not be able to get to the delete route without a token', async() => {
         await http.delete('/api/blog/1')
-            .expect(400);
+            .expect(401);
     });
 
     it('delete should work if token matches', async() => {
