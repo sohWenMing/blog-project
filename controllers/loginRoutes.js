@@ -18,7 +18,7 @@ loginRouter.post('/', async(req, res, next) => {
         }
         await checkPassword(password, foundUser.passwordHash);
         const token = signToken(foundUser._id.toString());
-        res.cookie('testCookie', token);
+        res.cookie('userCookie', token);
         res.status(200).json({
             token: token,
             userId: foundUser._id.toString(),
