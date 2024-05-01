@@ -19,11 +19,12 @@ loginRouter.post('/', async(req, res, next) => {
         await checkPassword(password, foundUser.passwordHash);
         const token = signToken(foundUser._id.toString());
         res.cookie('userCookie', token);
-        res.status(200).json({
-            token: token,
-            userId: foundUser._id.toString(),
-            username: foundUser.username
-        });
+        // res.status(200).json({
+        //     token: token,
+        //     userId: foundUser._id.toString(),
+        //     username: foundUser.username
+        // });
+        res.redirect('http://localhost:5173/home');
     }
     catch(error) {
         next(error);

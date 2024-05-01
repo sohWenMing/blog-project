@@ -7,7 +7,7 @@
     "dev": "nodemon index.js",
     "lint": "npx eslint . --fix",
     "test": "cross-env NODE_ENV=test node --test",
-    "test-script": "/Users/wenmingsoh/blog-project/tests/scripts/run_tests.sh"
+    "test-script": "/Users/wenmingsoh/workspace/blog-project/tests/scripts/run_tests.sh"
   },
   "author": "Soh Wen Ming",
   "license": "MIT",
