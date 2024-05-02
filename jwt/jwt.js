@@ -33,6 +33,13 @@ function getTokenFromHeader(req, res, next) {
     next();
 }
 
+function getCookieToken(req, res, next) {
+    const cookies = req.cookies;
+    const userCookie = cookies.userCookie;
+    const decodedData = verifyToken(userCookie);
+    console.log(decodedData);
+}
+
 module.exports = {
-    signToken, verifyToken, getTokenFromHeader
+    signToken, verifyToken, getTokenFromHeader, getCookieToken
 };
