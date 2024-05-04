@@ -26,7 +26,7 @@ connectToDB();
 app.use('/login', loginRouter);
 app.use('/', getCookieAndVerifyUser);
 app.use('/api/users', usersRouter);
-app.use('/api/blog', blogRouter);
+app.use('/api/blog', getCookieAndVerifyUser, blogRouter);
 
 app.use('/testCookie', cookieRouter);
 app.use('/', (req, res) => {
