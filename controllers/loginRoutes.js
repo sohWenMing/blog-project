@@ -31,4 +31,12 @@ loginRouter.post('/', async(req, res, next) => {
     }
 });
 
+loginRouter.get('/logout', (req, res) => {
+    res.clearCookie('userCookie');
+    const jsonMessage = {
+        message: 'cookie cleared'
+    };
+    res.status(200).json(jsonMessage);
+});
+
 module.exports = { loginRouter };
