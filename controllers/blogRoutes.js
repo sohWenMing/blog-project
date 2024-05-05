@@ -14,14 +14,10 @@ blogRouter.get('/', async(req, res, next) => {
             return post.toJSON();
         });
         const postJsonArray = await Promise.all(postPromises);
-        const username = req.userData.username;
 
         const response = {
-            username,
             postJsonArray
         };
-
-        console.log("response sent: ", response);
         res.status(200).json(response);
     }
     catch(error) {

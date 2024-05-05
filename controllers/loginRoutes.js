@@ -18,13 +18,11 @@ loginRouter.post('/', async(req, res, next) => {
         }
         await checkPassword(password, foundUser.passwordHash);
         const token = signToken(foundUser._id.toString());
-        res.cookie('userCookie', token);
         res.status(200).json({
             token: token,
             userId: foundUser._id.toString(),
             username: foundUser.username
         });
-        // res.redirect('http://localhost:5173/home');
     }
     catch(error) {
         next(error);
@@ -32,11 +30,7 @@ loginRouter.post('/', async(req, res, next) => {
 });
 
 loginRouter.get('/logout', (req, res) => {
-    res.clearCookie('userCookie');
-    const jsonMessage = {
-        message: 'cookie cleared'
-    };
-    res.status(200).json(jsonMessage);
+    res.status(200).send('hitting logout');
 });
 
 module.exports = { loginRouter };
