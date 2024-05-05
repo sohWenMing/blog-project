@@ -7,11 +7,11 @@ const { errorHandler } = require('./utils/errorUtils');
 const { generateAndThrowError } = require('./utils/errorUtils/errorGenerator');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const origin = process.env.NODE_ENV === 'PROD' ? 'http://localhost:5173' : 'https://blog-front-end-p8zv.onrender.com/';
+const origin = process.env.NODE_ENV !== 'PROD' ? 'http://localhost:5173' : 'https://blog-front-end-p8zv.onrender.com/';
 
 app.use(cors({
     // origin: origin,
-    origin: 'https://blog-front-end-p8zv.onrender.com/',
+    origin: origin,
     credentials: true
 }));
 
