@@ -10,7 +10,8 @@ const cors = require('cors');
 const origin = process.env.NODE_ENV === 'PROD' ? 'http://localhost:5173' : 'https://blog-front-end-p8zv.onrender.com/';
 
 app.use(cors({
-    origin: origin,
+    // origin: origin,
+    origin: 'https://blog-front-end-p8zv.onrender.com/',
     credentials: true
 }));
 
